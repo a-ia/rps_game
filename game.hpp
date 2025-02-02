@@ -1,8 +1,10 @@
 #include <string>
 #include <random>
+#include <fstream>
 #include <vector>
+#include <algorithm>
 #include <filesystem>
-
+ 
 struct PlayerStats {
     std::string username;
     int wins = 0;
