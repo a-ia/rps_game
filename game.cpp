@@ -7,6 +7,10 @@ bool RPSGame::isValidUsername(const std::string& username) {
     return username.length() >= 8;
 }
 
+void RPSGame::displayTitle() {
+    std::cout << "\033[1;36m" << TITLE_ASCII << "\033[0m\n";
+}
+
 RPSGame::Choice RPSGame::getComputerChoice() {
     std::uniform_int_distribution<> dis(0, 2);
     return static_cast<Choice>(dis(gen));
@@ -14,7 +18,11 @@ RPSGame::Choice RPSGame::getComputerChoice() {
 
 RPSGame::Choice RPSGame::getUserChoice() {
     while (true) {
-        std::cout << "\nEnter your choice (R)ock, (P)aper, or (S)cissors: ";
+
+    std::cout << "(R) \033[1;37mROCK\033[0m     🪨\n"
+              << "(P) \033[1;37mPAPER\033[0m    📄\n"
+              << "(S) \033[1;37mSCISSORS\033[0m ✂️\n\n";
+
         char choice;
         std::cin >> choice;
         choice = std::toupper(choice);
@@ -24,7 +32,7 @@ RPSGame::Choice RPSGame::getUserChoice() {
             case 'P': return Choice::PAPER;
             case 'S': return Choice::SCISSORS;
             default:
-                std::cout << "Invalid choice. Please try again.\n";
+                std::cout << "Invalid choice. Please choose the input R, P, or S.\nPlease try again.\n";
         }
     }
 }
@@ -102,7 +110,7 @@ void RPSGame::showRankings() {
                   return a.score > b.score;
               });
 
-    std::cout << "\n=== RANKINGS ===\n";
+    std::cout << "\n==================== RANKINGS ====================\n";
     std::cout << std::setw(20) << "Username" << std::setw(10) << "Score"
               << std::setw(10) << "Wins" << std::setw(10) << "Ties" << "\n";
     std::cout << std::string(50, '-') << "\n";
@@ -116,6 +124,7 @@ void RPSGame::showRankings() {
 }
 
 void RPSGame::start() {
+    displayTitle();
     std::cout << "Welcome to Rock Paper Scissors!\n\n";
 
     do {
@@ -173,6 +182,8 @@ void RPSGame::start() {
             }
             case '2':
                 showRankings();
+                std::cout << "\nPress Enter to return to the menu...";
+                std::cin.get();
                 break;
             case '3':
                 quit = true;
@@ -183,5 +194,5 @@ void RPSGame::start() {
     }
 
     saveGameData();
-    std::cout << "\nThanks for playing! Final score saved.\n";
+    std::cout << "\nThanks for playing, " << currentPlayer.username << "!\nFinal score saved.\n";
 }
