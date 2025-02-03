@@ -3,12 +3,41 @@
 #include <filesystem>
 #include <iomanip>
 
-bool RPSGame::isValidUsername(const std::string& username) {
-    return username.length() >= 8;
+const std::string RPSGame::TITLE_ASCII = R"(
+ _______    _______    _______        ______           
+(  ____ )  (  ____ )  (  ____ \      (  ___ \ |\     /|
+| (    )|  | (    )|  | (    \/      | (   ) )( \   / )
+| (____)|  | (____)|  | (_____       | (__/ /  \ (_) / 
+|     **)  |  **___)  (_____  )      |  __ (    \   /  
+| (\ (     | (              ) |      | (  \ \    ) (   
+| ) \ \__  | )        /\____) |      | )___) )   | |   
+|/   \__/  |/         \_______)      |/ \___/    \_/   
+                                                       
+ _______           _______  _______  _______  _        
+(  ____ \|\     /|(  ___  )(  ____ )(  ___  )( (    /| 
+| (    \/| )   ( || (   ) || (    )|| (   ) ||  \  ( | 
+| (_____ | (___) || (___) || (____)|| |   | ||   \ | | 
+(_____  )|  ___  ||  ___  ||     __)| |   | || (\ \) | 
+      ) || (   ) || (   ) || (\ (   | |   | || | \   | 
+/\____) || )   ( || )   ( || ) \ \__| (___) || )  \  | 
+\_______)|/     \||/     \||/   \__/(_______)|/    )_)
+  )";
+
+void resetScreen() {
+#ifdef _WIN32
+        system("cls");
+#else
+        system("clear");
+#endif
+    RPSGame::displayTitle();
 }
 
 void RPSGame::displayTitle() {
-    std::cout << "\033[1;36m" << TITLE_ASCII << "\033[0m\n";
+    std::cout << TITLE_ASCII << "\n\n";
+}
+
+bool RPSGame::isValidUsername(const std::string& username) {
+    return username.length() >= 8;
 }
 
 RPSGame::Choice RPSGame::getComputerChoice() {
@@ -103,6 +132,7 @@ std::vector<PlayerStats> RPSGame::loadAllPlayerStats() {
 }
 
 void RPSGame::showRankings() {
+
     auto allStats = loadAllPlayerStats();
 
     std::sort(allStats.begin(), allStats.end(),
@@ -110,6 +140,7 @@ void RPSGame::showRankings() {
                   return a.score > b.score;
               });
 
+    resetScreen();
     std::cout << "\n==================== RANKINGS ====================\n";
     std::cout << std::setw(20) << "Username" << std::setw(10) << "Score"
               << std::setw(10) << "Wins" << std::setw(10) << "Ties" << "\n";
@@ -121,10 +152,15 @@ void RPSGame::showRankings() {
                   << std::setw(10) << stats.wins
                   << std::setw(10) << stats.ties << "\n";
     }
+
+    std::cout << "\nPress Enter to return to the menu...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear input buffer
+    std::cin.get();
 }
 
 void RPSGame::start() {
-    displayTitle();
+
+    resetScreen();
     std::cout << "Welcome to Rock Paper Scissors!\n\n";
 
     do {
@@ -133,9 +169,13 @@ void RPSGame::start() {
     } while (!isValidUsername(currentPlayer.username));
 
     loadGameData();
+    std::cout << "\nPress Enter to continue...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  // Clear the input buffer
+    std::cin.get();
 
     bool quit = false;
     while (!quit) {
+        resetScreen(); 
         std::cout << "\n1. Play game\n2. Show rankings\n3. Quit\nChoice: ";
         char menuChoice;
         std::cin >> menuChoice;
@@ -145,6 +185,7 @@ void RPSGame::start() {
                 // Game loop
                 char playAgain;
                 do {
+                    resetScreen(); 
                     Choice computerChoice = getComputerChoice();
                     Choice userChoice = getUserChoice();
 
@@ -182,8 +223,6 @@ void RPSGame::start() {
             }
             case '2':
                 showRankings();
-                std::cout << "\nPress Enter to return to the menu...";
-                std::cin.get();
                 break;
             case '3':
                 quit = true;
