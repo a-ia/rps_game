@@ -1,3 +1,0 @@
-/home/angel/Documents/game eng/Assignment 2 Sharon Sudan/rps_game/build/CMakeFiles/rps_game.dir
-/home/angel/Documents/game eng/Assignment 2 Sharon Sudan/rps_game/build/CMakeFiles/edit_cache.dir
-/home/angel/Documents/game eng/Assignment 2 Sharon Sudan/rps_game/build/CMakeFiles/rebuild_cache.dir
